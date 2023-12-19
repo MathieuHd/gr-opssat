@@ -1,15 +1,46 @@
 # gr-opssat
 
-Authors: Fischer Benjamin (benjamin.fischer@arcticspacetech.com), Tom Mladenov (tom.mladenov@esa.int)
+This repository is an updated version of https://github.com/esa/gr-opssat in order to keep compatibility with GNURadio 3.10+.
+
+Initial authors: Fischer Benjamin (benjamin.fischer@arcticspacetech.com), Tom Mladenov (tom.mladenov@esa.int)
+Updates: Mathieu Havard (mathieu.havard@esa.int)
 
 This repository contains documentation, and applications for receiving, demodulating, and decoding the UHF signal transmitted by the ESA OPS-SAT mission. It also contains a full graphical application for viewing and parsing the beacon frames transmitted by OPS-SAT.
 
-https://opssat1.esoc.esa.int/
-https://opssat1.esoc.esa.int/projects/amateur-radio-information-bulletin
+For more information:
+[ESA OPS-SAT Space Lab Community Platform](https://opssat1.esoc.esa.int/)
+[Amateur Radio Information Bulletin](https://opssat1.esoc.esa.int/projects/amateur-radio-information-bulletin)
+[OPS-SAT on esa.int](https://www.esa.int/Our_Activities/Operations/OPS-SAT)
 
-https://www.esa.int/Our_Activities/Operations/OPS-SAT
+## Changes from original repository
 
+### Diagrams
+
+**os_demode_decode**
+
+| Change | Unit |
+| -------------------------- | ---- |
+| Replaced deprecated blocks |      |
+
+**os_uhf_rx**
+
+| Change                     | Unit                                   |
+| -------------------------- | -------------------------------------- |
+| Replaced deprecated blocks |                                        |
+| Removed obsolete versions  | os_uhf_rx.grc<br />or_uhf_rx_gnu38.grc |
+
+### Documentation
+
+**README.md**
+
+| Change                                                   | Unit                      |
+| -------------------------------------------------------- | ------------------------- |
+| Updated instructions to enable installation from scratch | Installation instructions |
+
+<details><summary>Old dcumentation - for migration</summary>
+````md
 ## Overview
+
 
 ### UHF specifications
 Can be found in docs/os-uhf-specs.pdf
@@ -110,9 +141,189 @@ Upon starting the GNURadio flowgraphs:
 
 Once it is known which of the pre-assigned NORAD IDs of Arianespace launch VS23 belongs to OPS-SAT, the currently disabled
 telemetry forwarder block in os-demod-decode.grc can be used to forward telemetry to various servers such as SatnogsDB.
+````
+</details>
+
+
+<!-- PROJECT LOGO -->
+<br />
+
+<div align="center">
+  <a href="https://github.com/mathieuhd/gr-opssat">
+    <img src="images/opssat_logo.png" alt="OPS-SAT" width="80" height="80">
+  </a>
+
+<h3 align="center">gr-opssat</h3>
+
+  <p align="center">
+    project_description
+    <br />
+    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    ·
+    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+  </p>
+</div>
 
 
 
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
+Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites - minimal installation
+
+To run the application using the pre-generated Python code, you will only need to have Python and the adequate hardware drivers.
+
+* Python3 and dependencies
+  ```sh
+  sudo apt install python3
+  pip install PyQt5
+  pip install pyzmq
+  pip install crccheck
+  pip install numpy
+  ```
+* SoapyRTLSDR
+  ```sh
+  sudo apt install soapysdr soapysdr-module-rtlsdr
+  ```
+
+### Prerequisites - complete installation
+
+The python modules are generated with GNURadio, thanks to specific extensions providin the required blocks to receive, demodulate, and decode the RF signal emitted by the spacecraft. **In addition to the minimal installation prerequisite**, be sure to install the following:
+
+* Gnuradio
+  ```sh
+  sudo apt install gnuradio 
+  ```
+* Gnuradio satellites **Command TBC**
+  ```sh
+  sudo apt install gnuradio-satellites
+  ```
+* Gpredict
+  ```sh
+  sudo apt install gpredict
+  ```
+* Gpredict doppler block for GNURadio
+  See [gr-gpredict-doppler](https://github.com/ghostop14/gr-gpredict-doppler) for installation
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/mathieuhd/gr-opssat.git
+   ```
+3. **Optionnal** If you wish to use RF signal recording to debug your setup, extract the provided archives
+   
+   ```js
+   cd gr-opssat/recordings
+   7za x osat_437.16M_250k_beacon_realistic_mode6.cf32.7z # Realistic beacon
+   7za x osat_437.16M_200k_beacon_mode6.cf32.7z # Strong beacon (for clear signal)
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+
+### Minimal installation
+
+You can run the application with the pre-generated python code, provided your setup is completely compatible. Just run the two radio modules and the TM viewer:
+
+```sh
+cd gr-opssat/apps/
+python3 os_uhf_rx.py &
+python3 os_demod_decode.py &
+python3 desktop/main.py &
+```
+
+### Complete installation and debugging
+
+Using the complete installation allows you to control and tweak the radio modules to fit your setup. Open the diagrams with GNURadio Companion to edit them, generate the Python code, and debug them. You can run a perfectly functional station this way:
+
+```sh
+cd gr-opssat/apps/
+
+# From the gnuradio-companion application, you can easily edit the diagrams
+gnuradio-companion os_uhf_rx.grc os_demod_decode.grc &
+
+# Once they are at your convenience, you can run the TM viewer
+python3 desktop/main.py &
+```
+
+![TM Viewer](images/opssat_desktop.png)
+
+_For more examples, please refer to the [Documentation](https://example.com)_
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CONTACT -->
+
+## Contact
+
+Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+
+Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
