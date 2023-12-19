@@ -38,7 +38,9 @@ For more information:
 | Updated instructions to enable installation from scratch | Installation instructions |
 
 <details><summary>Old dcumentation - for migration</summary>
-````md
+
+    ````md
+    
 ## Overview
 
 
