@@ -312,7 +312,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the GPLv3. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
