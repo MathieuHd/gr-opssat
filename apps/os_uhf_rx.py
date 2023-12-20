@@ -15,6 +15,7 @@ from gnuradio import qtgui
 from gnuradio import analog
 from gnuradio import blocks
 import pmt
+from gnuradio import blocks, gr
 from gnuradio import filter
 from gnuradio.filter import firdes
 from gnuradio import gr
@@ -82,7 +83,7 @@ class os_uhf_rx(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self._Squelch_range = Range(-180, -50, 1, -130, 200)
+        self._Squelch_range = Range(-180, -0, 1, -130, 200)
         self._Squelch_win = RangeWidget(self._Squelch_range, self.set_Squelch, "'Squelch'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._Squelch_win)
         self.zeromq_pub_sink_0 = zeromq.pub_sink(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:5555', 100, False, (-1), '', True, True)
@@ -137,7 +138,8 @@ class os_uhf_rx(gr.top_block, Qt.QWidget):
         self.gpredict_MsgPairToVar_0 = gpredict.MsgPairToVar(self.set_true_freq)
         self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(1, variable_low_pass_filter_taps_0, (-freq_tuned), samp_rate)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, '/home/ubuntu/Documents/gr-opssat/recordings/osat_437.16M_250ksps_mode6_realistic_beacon.cf32', True, 0, 0)
+        self.blocks_message_debug_0 = blocks.message_debug(True, gr.log_levels.info)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex*1, '/home/mathieu/Documents/gr-opssat/recordings/osat_437.16M_250ksps_mode6_realistic_beacon.cf32', True, 0, 0)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
         self.analog_simple_squelch_cc_0 = analog.simple_squelch_cc(Squelch, 1)
 
@@ -145,6 +147,7 @@ class os_uhf_rx(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
+        self.msg_connect((self.gpredict_doppler_1_0, 'freq'), (self.blocks_message_debug_0, 'print'))
         self.msg_connect((self.gpredict_doppler_1_0, 'freq'), (self.gpredict_MsgPairToVar_0, 'inpair'))
         self.connect((self.analog_simple_squelch_cc_0, 0), (self.freq_xlating_fir_filter_xxx_0, 0))
         self.connect((self.analog_simple_squelch_cc_0, 0), (self.qtgui_freq_sink_x_0, 0))

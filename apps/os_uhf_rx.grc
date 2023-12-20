@@ -44,7 +44,7 @@ blocks:
     rangeType: float
     start: '-180'
     step: '1'
-    stop: '-50'
+    stop: '-0'
     value: '-130'
     widget: counter_slider
   states:
@@ -180,7 +180,7 @@ blocks:
     alias: ''
     begin_tag: pmt.PMT_NIL
     comment: ''
-    file: /home/ubuntu/Documents/gr-opssat/recordings/osat_437.16M_250ksps_mode6_realistic_beacon.cf32
+    file: /home/mathieu/Documents/gr-opssat/recordings/osat_437.16M_250ksps_mode6_realistic_beacon.cf32
     length: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -195,6 +195,21 @@ blocks:
     coordinate: [40, 332.0]
     rotation: 0
     state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 208.0]
+    rotation: 0
+    state: true
 - name: blocks_throttle_0
   id: blocks_throttle
   parameters:
@@ -245,7 +260,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 172.0]
+    coordinate: [360, 152.0]
     rotation: 0
     state: enabled
 - name: gpredict_doppler_1_0
@@ -263,7 +278,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 176.0]
+    coordinate: [48, 160.0]
     rotation: 0
     state: enabled
 - name: note_0
@@ -472,6 +487,7 @@ connections:
 - [blocks_file_source_0, '0', blocks_throttle_0, '0']
 - [blocks_throttle_0, '0', analog_simple_squelch_cc_0, '0']
 - [freq_xlating_fir_filter_xxx_0, '0', rational_resampler_xxx_0, '0']
+- [gpredict_doppler_1_0, freq, blocks_message_debug_0, print]
 - [gpredict_doppler_1_0, freq, gpredict_MsgPairToVar_0, inpair]
 - [rational_resampler_xxx_0, '0', zeromq_pub_sink_0, '0']
 - [soapy_rtlsdr_source_0, '0', analog_simple_squelch_cc_0, '0']
