@@ -13,17 +13,16 @@
   <p align="center">
     Receive and read telemetry<br />from the ESA OPS-SAT Space Lab!
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
-    <br />
     <br />
     <a href="https://opssat1.esoc.esa.int/">Community platform</a>
     ·
     <a href="https://opssat1.esoc.esa.int/projects/amateur-radio-information-bulletin">Amateur Radio Information Bulletin</a>
     ·
     <a href="https://www.esa.int/Our_Activities/Operations/OPS-SAT">OPS-SAT on esa.int</a>
-    .
+    ·
     <a href="https://www.n2yo.com/satellite/?s=44878">Track on N2YO</a>
   </p>
+
 </div>
 
 <!-- TABLE OF CONTENTS -->
@@ -42,9 +41,9 @@
     <li>
         <a href="#usage">Usage</a>
         <ul>
-            <li><a href="#Setup-tweak-and-debug">Setup, tweak, and debug</a></li>
+            <li><a href="#setup-tweak-and-debug">Setup, tweak, and debug</a></li>
             <li><a href="#run-the-station">Run the station</a></li>
-            <li><a href="#engqge-gpredict-radio-control">Engage Gpredict radio control</a></li>
+            <li><a href="#engage-gpredict-radio-control">Engage Gpredict radio control</a></li>
         </ul>
     </li>
     <li>
@@ -57,6 +56,7 @@
     <li><a href="#license">License</a></li>
   </ol>
 </details>
+
 
 
 <!-- ABOUT THE PROJECT -->
@@ -80,9 +80,6 @@ _Upgrades:_ Mathieu Havard (mathieu.havard@esa.int)
 
 THe project receives and process signal emitted by the OPS-SAT Space Laboratory as depicted below.
 ```mermaid
----
-title: Signal processing overview
----
 flowchart LR
   opssat(("OPS-SAT<br/>🛰️"))
   rtl_hw["RTL Antenna<br/>📡"]
@@ -94,9 +91,10 @@ flowchart LR
   opssat -.->|"RF (UHF)<br/>437.2MHz"| rtl_hw
   rtl_hw -->|Soapy RTLSDR<br/>module| uhf_rx 
   gpredict -->|Radio control<br/>localhost:4532| uhf_rx
-  uhf_rx -->| ZMQ<br/>localhost:5555 | demod_decode 
-  demod_decode -->|ZMQ<br/>localhost:38211| tm_view
-
+  subgraph gr-opssat
+    uhf_rx -->| ZMQ<br/>localhost:5555 | demod_decode 
+    demod_decode -->|ZMQ<br/>localhost:38211| tm_view
+  end
 ```
 
 You will find in this repository the last 3 computational nodes of the chain:
@@ -273,7 +271,7 @@ The python modules are generated with GNURadio, thanks to specific extensions pr
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-### Steup, tweak, and debug
+### Setup, tweak, and debug
 
 Using the complete installation allows you to control and tweak the radio modules to fit your setup. Open the diagrams with GNURadio Companion to edit them, generate the Python code, and debug them.
 
@@ -399,3 +397,30 @@ Distributed under the GPLv3. See `LICENSE.txt` for more information.
 Readme template by [othneildrew](https://github.com/othneildrew/Best-README-Template).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+
+## PPM calibration notes
+I used [kalibrate](https://github.com/steve-m/kalibrate-rtl) with [librtlsdr](https://github.com/librtlsdr/librtlsdr). To get a first estimate of the PPM, you can run `rtl_test -p` for a few minute and use the mean PPM value. Then run `./kal -s GSM900 -e {PPM} -g 30` and tweak the PPM (`-e` parameter) until shown offset is about 1~2kHz max:
+
+``````sh
+$ ./kal -s GSM900 -e 34 -g 30
+Found 1 device(s):
+  0:  Generic RTL2832U OEM
+
+Using device 0: Generic RTL2832U OEM
+Found Rafael Micro R820T/2 tuner
+Exact sample rate is: 270833.002142 Hz
+Setting gain: 30.0 dB
+kal: Scanning for GSM-900 base stations.
+GSM-900:
+    chan:    1 (935.2MHz + 265Hz)    power: 2388746.08
+    chan:    2 (935.4MHz + 212Hz)    power: 2114897.55
+    chan:    4 (935.8MHz + 344Hz)    power: 1674639.51
+    chan:    8 (936.6MHz + 491Hz)    power:  881111.91
+    chan:   10 (937.0MHz + 572Hz)    power:  685955.43
+    chan:   12 (937.4MHz + 207Hz)    power: 1387559.06
+``````
+
+ NB: `kalibrate` requires `librtlsdr` to be built with `-DDETACH_KERNEL_DRIVER=ON` (default is `OFF`).
